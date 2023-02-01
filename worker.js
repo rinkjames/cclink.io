@@ -7,20 +7,9 @@ addEventListener('fetch', event => {
 		case 'DELETE':
 			return event.respondWith(handleDELETE(request));
 		default:
-			return event.respondWith(handleRequest(request, event));
+			return event.respondWith(handleRequest(request));
 	}
 });
-
-const html = `<!DOCTYPE html>
-<body>
-    <pre>
-    use an actual path if you're trying to fetch something.
-    send a POST request with form data "url" and "path" if you're trying to put something.
-    set x-preshared-key header for authentication.
-    
-    source: <a href="https://github.com/VandyHacks/vhl.ink">VandyHacks/vhl.ink</a>
-    </pre>
-</body>`;
 
 /**
  * Respond to POST requests with shortened URL creation
@@ -29,7 +18,7 @@ const html = `<!DOCTYPE html>
 async function handlePOST(request) {
 	const psk = request.headers.get('x-preshared-key');
 	if (psk !== SECRET_KEY)
-		return new Response('Sorry, bad key.', { status: 403 });
+		return new Response('Bad key', { status: 403 });
 
 	const shortener = new URL(request.url);
 	const data = await request.formData();
@@ -37,20 +26,20 @@ async function handlePOST(request) {
 	const path = data.get('path');
 
 	if (!redirectURL || !path)
-		return new Response('`url` and `path` need to be set.', { status: 400 });
+		return new Response("'url' and 'path' must be set", { status: 400 });
 
 	// validate redirectURL is a URL
 	try {
 		new URL(redirectURL);
 	} catch (e) {
 		if (e instanceof TypeError) 
-			return new Response('`url` needs to be a valid http url.', { status: 400 });
+			return new Response("'url' must be a valid http url", { status: 400 });
 		else throw e;
 	};
 
 	// will overwrite current path if it exists
 	await LINKS.put(path, redirectURL);
-	return new Response(`${redirectURL} available at ${shortener}${path}`, {
+	return new Response(`${shortener}${path}`, {
 		status: 201,
 	});
 }
@@ -68,7 +57,7 @@ async function handleDELETE(request) {
 	const path = url.pathname.split('/')[1];
 	if (!path) return new Response('Not found', { status: 404 });
 	await LINKS.delete(path);
-	return new Response(`${request.url} deleted!`, { status: 200 });
+	return new Response(`${request.url} successfully deleted`, { status: 200 });
 }
 
 /**
@@ -78,7 +67,7 @@ async function handleDELETE(request) {
  * shortlinks registered with the service.
  * @param {Request} request
  */
-async function handleRequest(request, event) {
+async function handleRequest(request) {
 	const url = new URL(request.url);
 	const path = url.pathname.split('/')[1];
 	if (!path) {
@@ -91,38 +80,11 @@ async function handleRequest(request, event) {
 			
 			return new Response(paths, { status: 200 });
 		}
-
-		return new Response(html, {
-			headers: {
-				'content-type': 'text/html;charset=UTF-8',
-			},
-		});
-	}
-	if (path === 'quack') {
-		const resObject = {
-			text: 'You just got ducked 🦆',
-			response_type: 'in_channel',
-		};
-	
-		// Just hope it works lol
-		await fetch(SLACK_WEBHOOK_QUACK, {
-			method: 'POST',
-			body: JSON.stringify(resObject),
-			headers: { 'Content-Type': 'application/json' },
-		});
+		return Response.redirect(url, 302);
 	}
 
 	const redirectURL = await LINKS.get(path);
-	if (redirectURL) {
-		const analyticsReq = {
-			method: 'POST',
-			body: JSON.stringify({ 'path': path }),
-			headers: { 'Content-Type': 'application/json' },
-		};
-		event.waitUntil(fetch(ANALYTICS_URL, analyticsReq));
+	if (redirectURL) return Response.redirect(redirectURL, 302);
 
-		return Response.redirect(redirectURL, 302);
-	}
-
-	return new Response('URL not found. Sad!', { status: 404 });
+	return new Response('url not found', { status: 404 });
 }
