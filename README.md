@@ -2,7 +2,7 @@
 
 Custom link shortener service using Cloudflare Workers + KV store on your domain. The Workers free tier is quite generous and perfectly suited for this since KV is optimized for high reads and infrequent writes, which is our use case. 
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rinkjames/cclink.io)
+<!-- [![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rinkjames/cclink.io) -->
 
 This API is easily consumed programmatically, such as through [shell functions](https://github.com/aadibajpai/dotfiles/blob/f1c58f7f19778c0d591b0a199427c519835a9614/fish/.config/fish/functions/shorten.fish#L1-L7) or [slack slash commands](https://github.com/VandyHacks/nimbus), making it trivial to shorten links on the fly.
 
