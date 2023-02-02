@@ -55,7 +55,8 @@ async function handleDELETE(request) {
 
 	const url = new URL(request.url);
 	const path = url.pathname.split('/')[1];
-	if (!path) return new Response('Not found', { status: 404 });
+	if (!path) return new Response(`Please supply a valid path`, { status: 404 });
+	if (await LINKS.get(path) == null) return new Response(`Path '${path}' not found`, { status: 404 });
 	await LINKS.delete(path);
 	return new Response(`${request.url} successfully deleted`, { status: 200 });
 }
@@ -70,6 +71,7 @@ async function handleDELETE(request) {
 async function handleRequest(request) {
 	const url = new URL(request.url);
 	const path = url.pathname.split('/')[1];
+	const host = url.toString().match(/(http[s]?:\/\/)?([^.]*)\.(.*)\//);
 	if (!path) {
 		// Return list of available shortlinks if user supplies admin credentials.
 		const psk = request.headers.get('x-preshared-key');
@@ -77,10 +79,10 @@ async function handleRequest(request) {
 			const { keys } = await LINKS.list();
 			let paths = "";
 			keys.forEach(element => paths += `${element.name}\n`);
-			
 			return new Response(paths, { status: 200 });
 		}
-		return Response.redirect(url, 302);
+		// console.log(`${url} ${path} ${host[1]+host[3]}`);
+		return new Response(`${new URL(host[1]+host[3])}`, {status: 302});
 	}
 
 	const redirectURL = await LINKS.get(path);
