@@ -82,7 +82,7 @@ async function handleRequest(request) {
 			return new Response(paths, { status: 200 });
 		}
 		// console.log(`${url} ${path} ${host[1]+host[3]}`);
-		return new Response(`${new URL(host[1]+host[3])}`, {status: 302});
+		return Response.redirect(new URL(host[1]+host[3]), 302);
 	}
 
 	const redirectURL = await LINKS.get(path);
