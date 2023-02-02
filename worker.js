@@ -18,7 +18,7 @@ addEventListener('fetch', event => {
 async function handlePOST(request) {
 	const psk = request.headers.get('x-preshared-key');
 	if (psk !== SECRET_KEY)
-		return new Response('Bad key', { status: 403 });
+		return new Response('bad key \n', { status: 403 });
 
 	const shortener = new URL(request.url);
 	const data = await request.formData();
@@ -26,20 +26,20 @@ async function handlePOST(request) {
 	const path = data.get('path');
 
 	if (!redirectURL || !path)
-		return new Response("'url' and 'path' must be set", { status: 400 });
+		return new Response("'url' and 'path' must be set \n", { status: 400 });
 
 	// validate redirectURL is a URL
 	try {
 		new URL(redirectURL);
 	} catch (e) {
 		if (e instanceof TypeError) 
-			return new Response("'url' must be a valid http url", { status: 400 });
+			return new Response("'url' must be a valid http url \n", { status: 400 });
 		else throw e;
 	};
 
 	// will overwrite current path if it exists
 	await LINKS.put(path, redirectURL);
-	return new Response(`${shortener}${path}`, {
+	return new Response(`${shortener}${path} \n`, {
 		status: 201,
 	});
 }
@@ -51,14 +51,14 @@ async function handlePOST(request) {
 async function handleDELETE(request) {
 	const psk = request.headers.get('x-preshared-key');
 	if (psk !== SECRET_KEY)
-		return new Response('Sorry, bad key.', { status: 403 });
+		return new Response('bad key \n', { status: 403 });
 
 	const url = new URL(request.url);
 	const path = url.pathname.split('/')[1];
-	if (!path) return new Response(`Please supply a valid path`, { status: 404 });
-	if (await LINKS.get(path) == null) return new Response(`Path '${path}' not found`, { status: 404 });
+	if (!path) return new Response(`please supply a valid path \n`, { status: 404 });
+	if (await LINKS.get(path) == null) return new Response(`Path '${path}' not found \n`, { status: 404 });
 	await LINKS.delete(path);
-	return new Response(`${request.url} successfully deleted`, { status: 200 });
+	return new Response(`${request.url} successfully deleted \n`, { status: 200 });
 }
 
 /**
@@ -88,5 +88,5 @@ async function handleRequest(request) {
 	const redirectURL = await LINKS.get(path);
 	if (redirectURL) return Response.redirect(redirectURL, 302);
 
-	return new Response('url not found', { status: 404 });
+	return new Response('url not found \n', { status: 404 });
 }
