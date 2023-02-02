@@ -1,0 +1,9 @@
+name = "dhealth-redirect"
+type = "javascript"
+account_id = "e14bc559836e4e1ea4f75ec16d420945"
+workers_dev = true
+route = "https://dhealth.cclink.io/*"
+zone_id = "ed182c38a269748b45fa8229f0c5bc7f"
+kv_namespaces = [
+  { binding = "LINKS", id = "4a6889b26e2a443ca870b137fcdf07dc", preview_id = "4a6889b26e2a443ca870b137fcdf07dc" }
+]
