@@ -1,9 +1,9 @@
-name = "dhealth-redirect"
+name = "cptsd-redirect"
 type = "javascript"
 account_id = "e14bc559836e4e1ea4f75ec16d420945"
 workers_dev = true
-route = "https://dhealth.cflink.io/*"
+route = "https://cptsd.cflink.io/*"
 zone_id = "b0b1d70d09fa1403d12713ed58404544"
 kv_namespaces = [
-  { binding = "LINKS", id = "4a6889b26e2a443ca870b137fcdf07dc", preview_id = "4a6889b26e2a443ca870b137fcdf07dc" }
+  { binding = "LINKS", id = "e6a84a10526941f1af3054b7aedf2483", preview_id = "e6a84a10526941f1af3054b7aedf2483" }
 ]
