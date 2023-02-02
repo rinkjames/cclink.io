@@ -1,4 +1,4 @@
-name = "cclink"
+name = "dhealth-redirect"
 type = "javascript"
 account_id = "e14bc559836e4e1ea4f75ec16d420945"
 workers_dev = true
