@@ -78,7 +78,7 @@ async function handleRequest(request) {
 		if (psk === SECRET_KEY) {
 			const { keys } = await LINKS.list();
 			let paths = "";
-			keys.forEach(element => paths += `${element.name}\n`);
+			keys.forEach(element => paths += `${host[0]}${element.name}\n`);
 			return new Response(paths, { status: 200 });
 		}
 		// console.log(`${url} ${path} ${host[1]+host[3]}`);
