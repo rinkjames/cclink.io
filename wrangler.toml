@@ -1,12 +1,11 @@
-name = "dhealth-redirect"
+name = "candid-redirect"
 main = "worker.js"
 compatibility_date = "2023-02-08"
 
 account_id = "e14bc559836e4e1ea4f75ec16d420945"
 workers_dev = true
-route = { pattern = "dhealth.cflink.io/*", zone_name = "cflink.io" }
-
+route = { pattern = "ig.candid.wtf/*", zone_name = "candid.wtf" }
 
 kv_namespaces = [
-  { binding = "LINKS", id = "4a6889b26e2a443ca870b137fcdf07dc", preview_id = "4a6889b26e2a443ca870b137fcdf07dc" }
+  { binding = "LINKS", id = "4686f5266ce3432ba15e1a2509a7eb49", preview_id = "4686f5266ce3432ba15e1a2509a7eb49" }
 ]
